@@ -1,5 +1,6 @@
-# Getting Started with Create React App
+# О проекте
 
+Данный проект является тестовым заданием от IT-компании TET-A-TET
 Проект создан на [React.js](https://github.com/facebook/create-react-app).
 
 ## Установка
@@ -23,5 +24,4 @@
 Сборка минимизирована, а имена файлов включают хэши.\
 Ваше приложение готово к развертыванию!
 
-См. раздел о [развертывании](https://facebook.github.io/create-react-
-app/docs/deployment) для получения дополнительной информации.
+См. раздел о [развертывании](https://facebook.github.io/create-react-app/docs/deployment) для получения дополнительной информации.
