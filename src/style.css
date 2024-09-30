@@ -124,6 +124,9 @@ button:hover {
     display: flex;
     background-color: var(--background-color);
     min-height: calc(100% - 90px);
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-end;
 }
 
 #fields {
@@ -296,4 +299,8 @@ button:hover {
 .cats input[type=checkbox]:disabled + span:before {
     filter: grayscale(100%);
     opacity: 0.6;
+}
+
+@media screen and (max-width: 980px) {
+    .zoneActive {width: -webkit-fill-available;;}
 }
