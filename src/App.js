@@ -16,8 +16,11 @@ const App = () => {
   const [now, setNow] = useState(new Date());
   const canvasRef = useRef(null);
   const chartRef = useRef(null);
+  const canvasLineRef = useRef(null);
+  const chartLineRef = useRef(null);
   const [sortMode, setSortMode] = useState('datetime');
   const [sortDirection, setSortDirection] = useState('up');
+  const months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 
   useEffect(() => {
     let updateColors = {};
@@ -38,6 +41,7 @@ const App = () => {
 
   useEffect(() => {
     document.body.classList.toggle('light-theme', theme === 'light');
+    document.body.style.display = '';
     localStorage.theme = theme;
 
     const handleThemeChange = (e) => {
@@ -84,6 +88,8 @@ const App = () => {
     const updatedCategories = [...categories, newCat];
     setCategories(updatedCategories);
     localStorage.setItem('categories', JSON.stringify(updatedCategories));
+
+    setSelectCategory([...selectCategory, newCat]);
 
     let updateColors = {};
     Object.assign(updateColors, colorCategories);
@@ -207,6 +213,7 @@ const App = () => {
   const updateDiagram = (now, selectCats=selectCategory, expss=exps) => {
     let cats = [];
     let sumExps = {};
+    let sumDay = {};
     const month = new Date(now.getFullYear(), now.getMonth(), 1).getTime() / 1000;
     const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1).getTime() / 1000;
 
@@ -215,6 +222,9 @@ const App = () => {
         const exp = expss[key];
         if (selectCats.includes(exp.category)) {
             if (!cats.includes(exp.category)) cats.push(exp.category);
+            const date = new Date(key*1000);
+            const k = `${date.getDate()} ${months[date.getMonth()].slice(0,3).toLowerCase()}`;
+            sumDay[k] = (sumDay[k] || 0) + exp.sum
             sumExps[exp.category] = (sumExps[exp.category] || 0) + exp.sum;
         }
       }
@@ -244,9 +254,28 @@ const App = () => {
       chartRef.current = new Chart(canvasRef.current, {
         type: 'pie',
         data: data,
-        options: {
-          onClick: (e) => console.log(e),
-        },
+      });
+    }
+    const dataLine = {
+        labels: Object.keys(sumDay),
+        datasets: [{
+            label: 'Сумма',
+            data: Object.values(sumDay),
+            fill: true,
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.3)',
+            tension: 0.2,
+            pointBorderWidth: 2,
+            pointRadius: 5,
+        }]
+    };
+    if (chartLineRef.current) {
+      chartLineRef.current.data = dataLine;
+      chartLineRef.current.update();
+    } else {
+      chartLineRef.current = new Chart(canvasLineRef.current, {
+        type: 'line',
+        data: dataLine,
       });
     }
   };
@@ -264,7 +293,7 @@ const App = () => {
 
       <div id="content">
         <div id="calculator" className="zoneActive">
-          <Context.Provider value={[canvasRef,now,setNow,selectCategory,exps]}>
+          <Context.Provider value={[canvasRef,canvasLineRef,now,setNow,selectCategory,exps]}>
             <MonthExps />
             <ChartDiagram />
           </Context.Provider>
@@ -356,7 +385,7 @@ const App = () => {
                     </label>
                     <button onClick={sortExps}>Сортировать</button>
                 </>)}>Сортировать расходы</button>
-                <button id="new_spending" onClick={() => createDialog(<>
+                <button disabled={categories.length===0} id="new_spending" onClick={() => createDialog(<>
                   <h2>Создание нового расхода:</h2>
                   <label>
                     <span>Категория:</span>

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import Context from './context.jsx';
 
 export default function ChartDiagram () {
-    const [canvasRef,now,setNow,selectCategory,exps] = useContext(Context);
+    const [canvasRef,canvasLineRef,now,setNow,selectCategory,exps] = useContext(Context);
     const months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 
     const handlePrevMonth = () => {

@@ -15,7 +15,7 @@ body.light-theme {
     --header-color: #efefef;
     --content-color: #fff;
     --calc-color: #eee;
-    --selected-color: #eee;
+    --selected-color: #dadada;
     --text-color: #000;
     --shadow-color: #858585;
 }
@@ -44,6 +44,11 @@ button {
 }
 button:hover {
     background-color: #45a049;
+}
+button:disabled {
+    background-color: #2d6430;
+    color: #bdbdbd;
+    cursor: default;
 }
 
 /* Верхняя строка */

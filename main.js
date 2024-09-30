@@ -31,7 +31,8 @@ createServer(function(req, res) {
     }
     if (!path.includes('/')||path==='/') path = '/index.html';
     let reqType = types[path.split('.').pop()] || types.txt;
-    readFile('./src' + path).catch(() => (readFile('./public' + path))).then(function(data) {
+    if (path.split('.').pop()==='map') path = '/index.html';
+    readFile('./public' + path).catch(() => (path='/index.html', reqType=types.html, readFile('./public' + path))).then(function(data) {
         send(200, {
             'Content-Type': reqType,
             'Cache-Control': (reqType===types.js && path==='/chart.js') ? 'max-age=360000' : (reqType===types.svg ? 'max-age=3600' : 'no-cache')
